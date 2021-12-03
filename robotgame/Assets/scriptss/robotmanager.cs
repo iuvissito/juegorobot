@@ -7,9 +7,11 @@ public class robotmanager : MonoBehaviour
     // Start is called before the first frame update
     Animator animator;
     Rigidbody2D rb;
-    float speed;
-    float maxspeed;
-    float desplX;
+    [SerializeField] float speed;
+    [SerializeField] float maxspeed;
+    [SerializeField] float desplX;
+    [SerializeField] float jumpforce;
+   
     bool alive = true;
     bool facingrigth = true;
     void Start()
@@ -17,6 +19,9 @@ public class robotmanager : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         maxspeed = 2f;
+        jumpforce = 5f;
+        
+       
     }
 
     // Update is called once per frame
@@ -24,11 +29,14 @@ public class robotmanager : MonoBehaviour
     {
         desplX = Input.GetAxis("Horizontal");
         Girar();
+        Saltar();
+        
     }
     private void FixedUpdate()
     {
        
         Caminar();
+       
         
     }
     void Caminar()
@@ -39,7 +47,7 @@ public class robotmanager : MonoBehaviour
         speed = rb.velocity.x;
         print(speed);
     }
-    // codigo bruto flipear 
+    // lo de la bool es para que no este comprobando todo el rato a donde esta mirando
     void Girar()
     { 
         if (desplX < 0 && facingrigth)
@@ -51,6 +59,18 @@ public class robotmanager : MonoBehaviour
         {
             transform.localScale = new Vector3(1f, 1f, 1f);
             facingrigth = true;
+        }
+      
+    }
+    void Saltar()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+
+        {
+            print("www");
+            rb.AddForce(new Vector2(0f, 1f) * jumpforce, ForceMode2D.Impulse);
+            animator.SetTrigger("jump");
+            
         }
     }
 }
