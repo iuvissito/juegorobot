@@ -11,8 +11,8 @@ public class robotmanager : MonoBehaviour
     [SerializeField] float maxspeed;
     [SerializeField] float desplX;
     [SerializeField] float jumpforce;
-   
-    bool alive = true;
+    bool ingrounder = true;
+    bool alive;
     bool facingrigth = true;
     void Start()
     {
@@ -20,8 +20,9 @@ public class robotmanager : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         maxspeed = 2f;
         jumpforce = 5f;
-        
-       
+        alive = true;
+        ingrounder = true;
+
     }
 
     // Update is called once per frame
@@ -30,14 +31,14 @@ public class robotmanager : MonoBehaviour
         desplX = Input.GetAxis("Horizontal");
         Girar();
         Saltar();
-        
+
     }
     private void FixedUpdate()
     {
-       
+
         Caminar();
-       
-        
+
+
     }
     void Caminar()
     {
@@ -49,10 +50,10 @@ public class robotmanager : MonoBehaviour
     }
     // lo de la bool es para que no este comprobando todo el rato a donde esta mirando
     void Girar()
-    { 
+    {
         if (desplX < 0 && facingrigth)
         {
-            transform.localScale = new Vector3(-1f, 1f,1f);
+            transform.localScale = new Vector3(-1f, 1f, 1f);
             facingrigth = false;
         }
         else if (desplX > 0 && !facingrigth)
@@ -60,17 +61,22 @@ public class robotmanager : MonoBehaviour
             transform.localScale = new Vector3(1f, 1f, 1f);
             facingrigth = true;
         }
-      
+
     }
     void Saltar()
+        // de momento no me salta con el animator.getbool debo crear una collide que me indique que ingrounder = true codigo profe
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && animator.GetBool("ingrounder") == true)
 
         {
+            
             print("www");
             rb.AddForce(new Vector2(0f, 1f) * jumpforce, ForceMode2D.Impulse);
             animator.SetTrigger("jump");
             
+            ;
         }
+        
     }
 }
+
