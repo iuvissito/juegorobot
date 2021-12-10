@@ -31,21 +31,23 @@ public class robotmanager : MonoBehaviour
         desplX = Input.GetAxis("Horizontal");
         Girar();
         Saltar();
+        Correr();
 
     }
     private void FixedUpdate()
     {
 
         Caminar();
-
+        
 
     }
     void Caminar()
     {
         rb.velocity = new Vector2(desplX * maxspeed, rb.velocity.y);
+        speed = rb.velocity.x;
         speed = Mathf.Abs(speed);
         animator.SetFloat("speedx", speed);
-        speed = rb.velocity.x;
+        
         print(speed);
     }
     // lo de la bool es para que no este comprobando todo el rato a donde esta mirando
@@ -64,19 +66,66 @@ public class robotmanager : MonoBehaviour
 
     }
     void Saltar()
-        // de momento no me salta con el animator.getbool debo crear una collide que me indique que ingrounder = true codigo profe
+    // de momento no me salta con el animator.getbool debo crear una collide que me indique que ingrounder = true codigo profe
     {
         if (Input.GetKeyDown(KeyCode.Space) && animator.GetBool("ingrounder") == true)
 
         {
-            
-            print("www");
+
+            //print("www");
             rb.AddForce(new Vector2(0f, 1f) * jumpforce, ForceMode2D.Impulse);
             animator.SetTrigger("jump");
-            
-            ;
+
+
         }
-        
+
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 6)
+        {
+            //print("Estoy tocando suelo");
+            animator.SetBool("ingrounder", true);
+        }
+
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 6)
+        {
+            //print("NO Estoy tocando suelo");
+            animator.SetBool("ingrounder", false);
+        }
+
+    }
+    void Correr()
+    {
+        /*funciona con ambos ,antes no me funcionaba por el fixed update y la alteracion de el orden de speed = rb.velocity.x;
+        speed = Mathf.Abs(speed); QueryTriggerInteraction lo tenia inverso en Caminar()
+        if (speed > 0 && Input.GetKey(KeyCode.LeftControl))
+        {
+            
+            maxspeed = 5f;
+
+        }
+        else
+        {
+            maxspeed = 2f;
+
+        }*/
+        if (speed > 0 && Input.GetKeyDown(KeyCode.LeftControl))
+        {
+
+            maxspeed = 5f;
+
+        }
+        if (speed > 0 && Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            maxspeed = 2f;
+
+        }
+
     }
 }
 
